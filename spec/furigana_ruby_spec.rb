@@ -1,39 +1,38 @@
 # frozen_string_literal: true
 require "spec_helper"
-require "furigana_ruby"
 
-RSpec.describe FuriganaRuby do
+RSpec.describe FuriganaRuby::Parser do
   it "single gem that spans the entire word" do
     reading = "動物[どうぶつ]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "single gem in middle of a word" do
     reading = "新[あたら]しい"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "multiple gems inside word" do
     reading = "黒[くろ]熊[くま]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "readings without gems do not change" do
     reading = "ライオン"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "honorific should not be included in gem" do
     reading = "お茶[ちゃ]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.hiragana).to eq("おちゃ")
@@ -43,7 +42,7 @@ RSpec.describe FuriganaRuby do
 
   it "honorific should not be included in gem2" do
     reading = "起[お]きます"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.hiragana).to eq("おきます")
@@ -53,7 +52,7 @@ RSpec.describe FuriganaRuby do
 
   it "number should not be included in gem" do
     reading = "9時[じ]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.hiragana).to eq("9じ")
@@ -63,7 +62,7 @@ RSpec.describe FuriganaRuby do
 
   it "punctuation should not be included in gem" do
     reading = "大[おお]きい。犬[いぬ]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.hiragana).to eq("おおきい。いぬ")
@@ -73,7 +72,7 @@ RSpec.describe FuriganaRuby do
 
   it "romaji should not be included in gem" do
     reading = "Big犬[いぬ]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.hiragana).to eq("Bigいぬ")
@@ -83,7 +82,7 @@ RSpec.describe FuriganaRuby do
 
   it "katana should not be included in gem" do
     reading = "ローマ字[じ]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.hiragana).to eq("ローマじ")
@@ -93,7 +92,7 @@ RSpec.describe FuriganaRuby do
 
   it "hiragana should not be included in gem" do
     reading = "売[う]り場[ば]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.hiragana).to eq("うりば")
@@ -103,7 +102,7 @@ RSpec.describe FuriganaRuby do
 
   it "お in furigana is not treated as honorific" do
     reading = "起[お]きます"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.hiragana).to eq("おきます")
@@ -113,35 +112,35 @@ RSpec.describe FuriganaRuby do
 
   it "honorific in middle of a phrase" do
     reading = "東京[とうきょう] お急行[きゅうこう]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "honorific in middle of a word" do
     reading = "東京[とうきょう]お急行[きゅうこう]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "honorific at end of a word" do
     reading = "茶[ちゃ]お"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "space can be a delimiter between hiragana sections" do
     reading = "あの 人[ひと]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "preserve a space between segments" do
     reading = "東京[とうきょう] 急行[きゅうこう]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.expression).to eq("東京 急行")
@@ -151,56 +150,56 @@ RSpec.describe FuriganaRuby do
 
   it "preserve multiple spaces between segments" do
     reading = "東京[とうきょう]    急行[きゅうこう]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq("東京[とうきょう]    急行[きゅうこう]")
   end
 
   it "last character in reading is space" do
     reading = "東京[とうきょう] 急行[きゅうこう]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
   end
 
   it "ignore empty furigana section" do
     reading = "あの[]人[ひと]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq("あの人[ひと]")
   end
 
   it "ignore furigana with only whitespace" do
     reading = "あの[ ]人[ひと]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq("あの人[ひと]")
   end
 
   it "furigana to expression" do
     reading = "動物[どうぶつ]"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.expression).to eq("動物")
   end
 
   it "furigana to hiragana" do
     reading = "新[あたら]しい"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.hiragana).to eq("あたらしい")
   end
 
   it "furigana to html ruby" do
     reading = "新[あたら]しい"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading_html).to eq("<ruby><rb>新</rb><rt>あたら</rt></ruby>しい")
   end
 
   it "empty furigana" do
     reading = ""
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.expression).to eq("")
@@ -210,7 +209,7 @@ RSpec.describe FuriganaRuby do
 
   it "null furigana" do
     reading = ""
-    furigana = FuriganaRuby.new(nil)
+    furigana = FuriganaRuby::Parser.new(nil)
 
     expect(furigana.reading).to eq(reading)
     expect(furigana.expression).to eq("")
@@ -220,7 +219,7 @@ RSpec.describe FuriganaRuby do
 
   it "allow html inside string" do
     reading = "学生です<span class='particle'>か</span>。"
-    furigana = FuriganaRuby.new(reading)
+    furigana = FuriganaRuby::Parser.new(reading)
 
     expect(furigana.reading_html).to eq(reading)
   end
