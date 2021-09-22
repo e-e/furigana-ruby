@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "spec_helper"
+require "furigana_ruby"
 
 RSpec.describe FuriganaRuby do
   it "single gem that spans the entire word" do
