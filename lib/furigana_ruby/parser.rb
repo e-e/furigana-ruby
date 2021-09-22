@@ -1,15 +1,16 @@
+# frozen_string_literal: true
 
 ##
 # @param [String] string
 # @return [Boolean]
 def present?(string)
-  !string.nil? && !string.empty? && string.strip.length > 0
+  !string.nil? && !string.empty? && string.strip.length.positive?
 end
 
 module FuriganaRuby
+  ##
+  # Performs parsing
   class Parser
-    attr_reader :reading, :expression, :hiragana, :reading_html
-
     ##
     # @param [String] text
     def initialize(text)
@@ -17,21 +18,23 @@ module FuriganaRuby
     end
 
     def reading
-      @_reading ||= @segments.map(&:reading).join("")
+      @reading ||= @segments.map(&:reading).join("")
     end
 
     def expression
-      @_expression ||= @segments.map(&:expression).join("")
+      @expression ||= @segments.map(&:expression).join("")
     end
 
     def hiragana
-      @_hiragana ||= @segments.map(&:hiragana).join("")
+      @hiragana ||= @segments.map(&:hiragana).join("")
     end
 
     def reading_html
-      @_reading_html ||= @segments.map(&:reading_html).join("")
+      @reading_html ||= @segments.map(&:reading_html).join("")
     end
 
+    ##
+    # Performs the parsing
     class FuriganaParser
       attr_reader :segments
 
@@ -46,11 +49,10 @@ module FuriganaRuby
 
         process
       end
-      
-      
 
+      # rubocop:disable Metrics/MethodLength
       def process
-        while @characters.length > 0
+        while @characters.length.positive?
           current = @characters.shift
 
           if current == "["
@@ -69,11 +71,10 @@ module FuriganaRuby
 
         next_segment
       end
+      # rubocop:enable Metrics/MethodLength
 
       def next_segment
-        if @current_base.length > 0
-          @segments << get_segment(@current_base, @current_furigana)
-        end
+        @segments << get_segment(@current_base, @current_furigana) if @current_base.length.positive?
 
         @current_base = ""
         @current_furigana = ""
@@ -84,10 +85,7 @@ module FuriganaRuby
       # @param [String] base_text
       # @param [String] furigana
       def get_segment(base_text, furigana)
-        # puts("get_segment/furigana: #{furigana}")
-        unless present?(furigana)
-          return UndecoratedSegment.new(base_text)
-        end
+        return UndecoratedSegment.new(base_text) unless present?(furigana)
 
         FuriganaSegment.new(base_text, furigana)
       end
@@ -97,7 +95,7 @@ module FuriganaRuby
       # @param [Array<String>] character_list
       # @return [Boolean]
       def last_character_in_block?(current, character_list)
-        character_list.length == 0 ||
+        character_list.length.zero? ||
           (
             kanji?(current) != kanji?(character_list[0]) &&
               character_list[0] != "["
@@ -112,6 +110,8 @@ module FuriganaRuby
       end
     end
 
+    ##
+    # Segment with ruby markup
     class FuriganaSegment
       attr_reader :expression, :hiragana, :reading, :reading_html
 
@@ -121,11 +121,13 @@ module FuriganaRuby
       def initialize(base_text, furigana)
         @expression = base_text
         @hiragana = furigana.strip
-        @reading = base_text + "[" + furigana + "]"
-        @reading_html = "<ruby><rb>" + base_text + "</rb><rt>" + furigana + "</rt></ruby>"
+        @reading = "#{base_text}[#{furigana}]"
+        @reading_html = "<ruby><rb>#{base_text}</rb><rt>#{furigana}</rt></ruby>"
       end
     end
 
+    ##
+    # Segment not needing ruby markup
     class UndecoratedSegment
       attr_reader :expression, :hiragana, :reading, :reading_html
 

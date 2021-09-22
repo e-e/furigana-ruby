@@ -1,6 +1,8 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe FuriganaRuby::Parser do
   it "single gem that spans the entire word" do
     reading = "動物[どうぶつ]"
@@ -224,3 +226,4 @@ RSpec.describe FuriganaRuby::Parser do
     expect(furigana.reading_html).to eq(reading)
   end
 end
+# rubocop:enable Metrics/BlockLength
