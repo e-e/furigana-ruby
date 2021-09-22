@@ -42,9 +42,6 @@ GEM
     ruby-progressbar (1.11.0)
     unicode-display_width (2.1.0)
 
-PLATFORMS
-  universal-darwin-20
-
 DEPENDENCIES
   furigana_ruby!
   rake (~> 13.0)
