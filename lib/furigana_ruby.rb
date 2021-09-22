@@ -2,7 +2,7 @@
 
 require_relative "furigana_ruby/version"
 
-module FuriganaRuby
+class FuriganaRuby
   class Error < StandardError; end
 
 
