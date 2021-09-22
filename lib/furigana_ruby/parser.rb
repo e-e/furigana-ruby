@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
-##
-# @param [String] string
-# @return [Boolean]
-def present?(string)
-  !string.nil? && !string.empty? && string.strip.length.positive?
-end
+require_relative "utils"
 
 module FuriganaRuby
   ##
@@ -45,7 +40,7 @@ module FuriganaRuby
         @current_base = ""
         @current_furigana = ""
         @parsing_base_section = true
-        @characters = present?(reading) && reading.length ? reading.split("") : []
+        @characters = Utils.present?(reading) && reading.length ? reading.split("") : []
 
         process
       end
@@ -85,7 +80,7 @@ module FuriganaRuby
       # @param [String] base_text
       # @param [String] furigana
       def get_segment(base_text, furigana)
-        return UndecoratedSegment.new(base_text) unless present?(furigana)
+        return UndecoratedSegment.new(base_text) unless Utils.present?(furigana)
 
         FuriganaSegment.new(base_text, furigana)
       end
@@ -106,7 +101,7 @@ module FuriganaRuby
       # @return [Boolean]
       def kanji?(character)
         char = character[0, 1]
-        present?(character) && char.ord >= 0x4e00 && char.ord <= 0x9faf
+        Utils.present?(character) && char.ord >= 0x4e00 && char.ord <= 0x9faf
       end
     end
 
