@@ -1,8 +1,6 @@
 # FuriganaRuby
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/furigana_ruby`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This is a direct ruby port from [Gem](https://github.com/helephant/Gem)
 
 ## Installation
 
@@ -22,7 +20,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+parsed = FuriganaRuby::Parser.new("簡[かん]単[たん]ね")
+puts(parsed.reading) # 簡[かん]単[たん]ね
+puts(parsed.expression) # 簡単ね
+puts(parsed.hiragana) # かんたんね
+puts(parsed.reading_html) # <ruby><rb>簡</rb><rt>かん</rt></ruby><ruby><rb>単</rb><rt>たん</rt></ruby>ね
+```
 
 ## Development
 
